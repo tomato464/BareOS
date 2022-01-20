@@ -1,20 +1,20 @@
 #include"defines.h"
+#include"efi.h"
+#include"lib.h"
 
 // for entry poin
 // efi_status main( EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *system_table);
 void EfiMain(EFI_HANDLE ImageHandle __attribute__ ((unused)), EFI_SYSTEM_TABLE *SystemTable)
 {
-	EFI_INPUT_KEY key;
-	CHAR16 str[3];
-	UINTN	waitidx;
+	CHAR16 buf[256];
+	EfiInit(SystemTable);
 
 	SystemTable->ConOut->ClearScreen(SystemTable->ConOut);
-	SystemTable->ConOut->OutPutString(SystemTable->ConOut, L"Hello UEFI!\n");
+	puts(L"Hello UEFI!\n");
 	while (1){
-		SystemTable->BootServices->WaitForEvent(1,
-									&(SystemTable->ConIn->WaitForKey), &waitidx);
-		
 
+		get(buf, 256);
+/*
 		SystemTable->ConIn->ReadKeyStroke(SystemTable->ConIn,&key);
 		if(key.UnicodeChar != L'\r'){
 			str[0] = key.UnicodeChar;
@@ -23,8 +23,6 @@ void EfiMain(EFI_HANDLE ImageHandle __attribute__ ((unused)), EFI_SYSTEM_TABLE *
 			str[0] = L'\r';
 			str[1] = L'\n';
 			str[2] = L'\0';
-		}
-		SystemTable->ConOut->OutPutString(SystemTable->ConOut,
-												str);
+		}*/
 	}
 }
