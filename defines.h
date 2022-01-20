@@ -1,5 +1,9 @@
 #ifndef _DEFINES_H_
 #define _DEFINES_H_
+#define NULL (void *) 0
+#define bool int
+#define true 1
+#define false 0
 typedef unsigned long long UINTN;
 typedef UINTN EFI_STATUS;
 typedef char INT8;
@@ -58,6 +62,23 @@ typedef struct {
 					UINTN	NumberOfEvents,
 					EFI_EVENT	*Event,
 					UINTN	*Index);
+	EFI_STATUS	_bufEE[3];
+
+	//protocol handler
+	EFI_STATUS	_bufP[4];
+	void *		Reserved;
+	EFI_STATUS	_bufPP[4];
+
+	//Image Services
+	EFI_STATUS	_bufI[5];
+
+	//Miscellaneous Services
+	EFI_STATUS	_bufMi[2];
+	EFI_STATUS	(*SetWatchdogTimer)(
+				UINT64 Timeout,
+				UINT64 WatchdogCode,
+				UINT64 DataSize,
+				UINT16 *WatchdogData);
 } EFI_BOOT_SERVICES;
 
 typedef struct EFI_SYSTEM_TABLE{
