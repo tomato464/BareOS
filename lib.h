@@ -6,7 +6,7 @@
 void putc(CHAR16 c);
 void puts(CHAR16 *s);
 CHAR16 getc(void);
-UINT32 get(CHAR16 *buf, UINT32 buf_size);
-int strncmp(const CHAR16 *s1, const CHAR16 *s2);
+UINT32 gets(CHAR16 *buf, UINT32 buf_size);
+int strcmp(const CHAR16 *s1, const CHAR16 *s2);
 
 #endif

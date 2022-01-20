@@ -28,7 +28,7 @@ CHAR16 getc(void)
 	return key.UnicodeChar;
 }
 
-UINT32 get(CHAR16 *buf, UINT32 buf_size)
+UINT32 gets(CHAR16 *buf, UINT32 buf_size)
 {
 	UINT32 i;
 	for(i = 0; i < buf_size - 1;i++){

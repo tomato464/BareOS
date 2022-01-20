@@ -4,7 +4,7 @@ CFLAGS=-Wall -Wextra -e EfiMain -nostdinc -nostdlib -fno-builtin -Wl,--subsystem
 
 TARGET=main.efi
 
-OBJS=main.o lib.o efi.o
+OBJS=main.o lib.o efi.o shell.o
 
 BOOT_PATH=../fs/EFI/BOOT/
 
