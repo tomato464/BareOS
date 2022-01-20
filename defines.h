@@ -11,6 +11,7 @@ typedef unsigned int UINT32;
 typedef long long INT64;
 typedef unsigned long long UINT64;
 typedef void *  EFI_HANDLE;
+typedef	void * EFI_EVENT;
 typedef unsigned short CHAR16;
 
 typedef struct {
@@ -41,18 +42,37 @@ typedef struct EFI_SIMPLE_TEXT_INPUT_PROTOCOL{
 	EFI_STATUS	(*ReadKeyStroke)(
 				struct EFI_SIMPLE_TEXT_INPUT_PROTOCOL *this,
 				EFI_INPUT_KEY *Key);
-	EFI_STATUS	Wait;
+	EFI_EVENT	WaitForKey;
 }EFI_SIMPLE_TEXT_INPUT_PROTOCOL;
+
+typedef struct {
+	EFI_TABLE_HEADER		Hdr;
+	// Tsk priority  2
+	EFI_STATUS	_bufT[2];
+	// Memory 5
+	EFI_STATUS	_bufM[5];
+	//Event
+	EFI_STATUS	_bufE[2];
+
+	EFI_STATUS	(*WaitForEvent)(	
+					UINTN	NumberOfEvents,
+					EFI_EVENT	*Event,
+					UINTN	*Index);
+} EFI_BOOT_SERVICES;
 
 typedef struct EFI_SYSTEM_TABLE{
 // declare just we want to use now(EFI_SIMPLE_TEXT_OUTPUT)
-	EFI_TABLE_HEADER	Hdr;
-	CHAR16	*FirmwareVender;
-	UINT32	FirmwareRevision;
-	EFI_HANDLE	ConsoleInHandle;
-	EFI_SIMPLE_TEXT_INPUT_PROTOCOL *ConIn;
-	EFI_HANDLE	ConsoleOutHandle;
+	EFI_TABLE_HEADER				Hdr;
+	CHAR16							*FirmwareVender;
+	UINT32							FirmwareRevision;
+	EFI_HANDLE						ConsoleInHandle;
+	EFI_SIMPLE_TEXT_INPUT_PROTOCOL 	*ConIn;
+	EFI_HANDLE						ConsoleOutHandle;
 	EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *ConOut;
+	EFI_HANDLE						StandardErrorHandle;
+	EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL	*StdErr;
+	EFI_STATUS						*RuntimeServices;//not implement
+	EFI_BOOT_SERVICES				*BootServices;
 } EFI_SYSTEM_TABLE;
 
 #endif
