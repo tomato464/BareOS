@@ -1,5 +1,7 @@
 #ifndef _DEFINES_H_
 #define _DEFINES_H_
+
+//////////// data type
 #define NULL (void *) 0
 #define bool int
 #define true 1
@@ -18,6 +20,68 @@ typedef void *  EFI_HANDLE;
 typedef	void * EFI_EVENT;
 typedef unsigned short CHAR16;
 
+
+////////////GUID
+typedef struct{
+	//128bit buffer
+	UINT32	buf1;
+	UINT16	buf2;
+	UINT16	buf3;
+	UINT8	buf4[8];
+}EFI_GUID;
+
+///Graphics output
+#define EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID	\
+		{0x9042a9de, 0x23dc, 0x4a38, {0x96, 0xfb, 0x7a, 0xde, \
+			0xd0, 0x80, 0x51, 0x6a}}
+
+typedef struct {
+	UINT8	Blue;
+	UINT8	Green;
+	UINT8	Red;
+	UINT8	Reserved;
+} EFI_GRAPHICS_OUTPUT_BLT_PIXEL_FORMAT;
+
+typedef enum{
+	PixelRedGreenBlueReserved8BitPerColor,
+	PixelBlueGreenRedReserved8BitPerColor,
+	PixelBotMask,
+	PixelBltOnly,
+	PixelFormatMax,
+}EFI_GRAPHICS_PIXEL_FORMAT;
+
+typedef struct{
+	UINT32	RedMask;
+	UINT32	GreenMask;
+	UINT32	BlueMask;
+	UINT32	ReservedMask;
+} EFI_PIXEL_BITMASK;
+
+typedef struct{
+	UINT32	Version;
+	UINT32	HorizontalResolution;
+	UINT32	VerticalResolution;
+	EFI_GRAPHICS_PIXEL_FORMAT	PixelFormat;
+	EFI_PIXEL_BITMASK	PixelInformation;
+
+	UINT32	PixcelsPerScanLine;
+}EFI_GRAPHICS_OUTPUT_MODE_INFORMATION;
+
+typedef struct{
+	UINT32	MaxMode;
+	UINT32	Mode;
+	EFI_GRAPHICS_OUTPUT_MODE_INFORMATION	*Info;
+	UINTN	SizeOfInfo;
+	UINTN	FrameBufferBase;
+	UINTN	FramBufferSize;
+} EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE;
+
+typedef struct EFI_GRAPHICS_OUTPUT_PROTOCOL{
+	EFI_STATUS mode[3];
+	EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE	*Mode;
+}EFI_GRAPHICS_OUTPUT_PROTOCOL;
+
+////////////System Table
 typedef struct {
 	UINT64 Signature;
 	UINT32 Revision;
@@ -79,6 +143,20 @@ typedef struct {
 				UINT64 WatchdogCode,
 				UINT64 DataSize,
 				UINT16 *WatchdogData);
+
+	//DriverSupport
+	EFI_STATUS	_bufD[2];
+
+	//open and close protocol
+	EFI_STATUS	_bufOC[3];
+
+	//library
+	EFI_STATUS	_bufL[2];
+	EFI_STATUS	(*LocateProtocol)(
+				EFI_GUID *protocol,
+				void *Registration,
+				void **Interface);
+
 } EFI_BOOT_SERVICES;
 
 typedef struct EFI_SYSTEM_TABLE{

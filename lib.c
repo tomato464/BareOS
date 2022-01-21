@@ -16,6 +16,22 @@ void puts(CHAR16 *s)
 	}
 }
 
+void putxval(UINT64 val, UINT64 column)
+{
+	 
+	if(!val && !column){
+		column++;
+	}
+	CHAR16 p[column + 2];
+	p[column + 1] = L'\0';
+	while(column || val){
+		p[column] = L"0123456789abcdef"[val & 0xf];
+		val = val >> 4;
+		column--;
+	}
+	puts(p+1);
+}
+
 CHAR16 getc(void)
 {
 	UINTN waitidx;
@@ -53,4 +69,12 @@ int strcmp(const CHAR16 *s1, const CHAR16 *s2)
 		s2++;
 	}
 	return 0;
+}
+
+void memset(void *p, int n, int size)
+{
+	UINT8 *start = (UINT8 *)p;
+	for(int i = 0; i < size; i++){
+		start[i] = n;
+	}
 }

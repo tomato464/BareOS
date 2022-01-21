@@ -3,6 +3,7 @@
 #include"defines.h"
 #include"efi.h"
 #include"lib.h"
+#include"graphics.h"
 
 void shell(void);
 
