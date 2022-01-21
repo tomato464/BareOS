@@ -4,6 +4,8 @@
 #include"efi.h"
 #include"lib.h"
 #include"graphics.h"
+#include"gui.h"
+extern RECT rec;
 
 void shell(void);
 

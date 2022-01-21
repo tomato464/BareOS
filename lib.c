@@ -10,26 +10,27 @@ void putc(CHAR16 c)
 
 void puts(CHAR16 *s)
 {
-	while(*s){
-		putc(*s);
-		s++;
-	}
+	SysTbl->ConOut->OutPutString(SysTbl->ConOut, s);
 }
 
-void putxval(UINT64 val, UINT64 column)
+void putxval(UINT64 val, UINT8 column)
 {
-	 
+	CHAR16 buf[9];
+
+	CHAR16 *p;
+	p = &buf[9];
 	if(!val && !column){
 		column++;
 	}
-	CHAR16 p[column + 2];
-	p[column + 1] = L'\0';
-	while(column || val){
-		p[column] = L"0123456789abcdef"[val & 0xf];
-		val = val >> 4;
-		column--;
+	*p = L'\0';
+	p--;
+	for(UINT8 i = 0; i < column; i++){
+		*p = L"0123456789abcdef"[val & 0x0f];
+		p--;
+		val = (val >> 4);
 	}
 	puts(p+1);
+	return;
 }
 
 CHAR16 getc(void)

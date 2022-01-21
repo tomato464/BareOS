@@ -3,7 +3,7 @@
 
 //////////// data type
 #define NULL (void *) 0
-#define bool int
+typedef unsigned char bool;
 #define true 1
 #define false 0
 typedef unsigned long long UINTN;
@@ -34,6 +34,44 @@ typedef struct{
 #define EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID	\
 		{0x9042a9de, 0x23dc, 0x4a38, {0x96, 0xfb, 0x7a, 0xde, \
 			0xd0, 0x80, 0x51, 0x6a}}
+
+//// Simple pointer protocol
+#define EFI_SIMPLE_POINTER_PROTOCOL_GUID	\
+		{0x31878c87, 0xb75, 0x11d5, {0x9a, 0x4f, 0x0, 0x90, \
+			0x27, 0x3f, 0xc1, 0x4d}}
+
+/////pointer
+
+
+typedef struct{
+	UINT64	ResolutionX;
+	UINT64	ResolutionY;
+	UINT64	ResolutionZ;
+	bool	LeftButton;
+	bool	RightButton;
+}EFI_SIMPLE_POINTER_MODE;
+
+typedef struct{
+	INT32	RelativeMomentX;
+	INT32	RelativeMomentY;
+	INT32	RelativeMomentZ;
+	bool	LeftButton;
+	bool	RightButton;
+}EFI_SIMPLE_POINTER_STATE;
+
+typedef struct EFI_SIMPLE_POINTER_PROTOCOL{
+	EFI_STATUS	(*Reset)(
+				struct EFI_SIMPLE_POINTER_PROTOCOL *this,
+				bool ExtendedVerification);
+	EFI_STATUS	(*GetState)(
+				struct EFI_SIMPLE_POINTER_PROTOCOL *this,
+				EFI_SIMPLE_POINTER_STATE *State);
+	EFI_EVENT	WaitForInput;
+	EFI_SIMPLE_POINTER_MODE	*Mode;
+}EFI_SIMPLE_POINTER_PROTOCOL;
+
+
+////graphics
 
 typedef struct {
 	UINT8	Blue;
@@ -129,9 +167,7 @@ typedef struct {
 	EFI_STATUS	_bufEE[3];
 
 	//protocol handler
-	EFI_STATUS	_bufP[4];
-	void *		Reserved;
-	EFI_STATUS	_bufPP[4];
+	EFI_STATUS	_bufP[9];
 
 	//Image Services
 	EFI_STATUS	_bufI[5];

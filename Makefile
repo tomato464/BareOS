@@ -5,7 +5,7 @@ LDFLAGS = -lgcc
 
 TARGET=main.efi
 
-OBJS=main.o lib.o efi.o shell.o graphics.o
+OBJS=main.o lib.o efi.o shell.o graphics.o gui.o
 
 BOOT_PATH=../fs/EFI/BOOT/
 
