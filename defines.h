@@ -20,6 +20,9 @@ typedef void *  EFI_HANDLE;
 typedef	void * EFI_EVENT;
 typedef unsigned short CHAR16;
 
+#define SC_OFS	0x1680
+#define SC_ESC	(SC_OFS + 0x0017)
+
 ////EFI STATUS CODES
 #define EFI_SUCCESS	0
 #define EFI_LOAD_ERROR	2

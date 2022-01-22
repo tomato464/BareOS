@@ -8,6 +8,8 @@
 #include"file.h"
 extern RECT rec;
 
+void cat(CHAR16 *file_name);
+UINT32 ls(void);
 void shell(void);
 
 #endif

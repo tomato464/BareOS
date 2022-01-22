@@ -4,6 +4,39 @@ EFI_GRAPHICS_OUTPUT_BLT_PIXEL_FORMAT cursol_tmp = {0, 0, 0, 0};
 UINT32 old_x;
 UINT32 old_y;
 
+static void gui_cat(CHAR16 *file_name)
+{
+	ClearScreen();
+	cat(file_name);
+
+	while(1){
+		if(getc() == SC_ESC){
+			break;
+		}
+	}
+}
+
+static UINT32 gui_ls()
+{	
+	ClearScreen();
+	UINT32 file_num = ls();
+	UINT32 x = 0;
+	UINT32 y = 0;
+	UINT32 len;
+
+	for(UINT32 idx = 0; idx < file_num; idx++){
+		len = strlen(FileList[idx].Name);
+		FileList[idx].rect.x = x;
+		FileList[idx].rect.y = y;
+		FileList[idx].rect.w = W_PER_CHAR * len;
+		FileList[idx].rect.h = H_PER_CHAR;
+		FileList[idx].IsHighlight = false;
+		DrawRect(FileList[idx].rect, white);
+		x = x + W_PER_CHAR * len;
+	}
+	return file_num;
+}
+
 static void DrawCursol(UINT32 x, UINT32 y)
 {
 	DrawPixel(x, y, white);
@@ -35,17 +68,17 @@ static void MoveCursol(UINT32 x, UINT32 y)
 void Gui(void)
 {
 	EFI_STATUS n;
-	RECT win = {10, 10, 20, 20};
 	UINTN waitidx;
 	EFI_SIMPLE_POINTER_STATE s;
+	UINT32 file_num;
+
+
 	SPP->Reset(SPP, false);
-	bool IsHilight = false;
 
 	int cursol_x = 100;
 	int cursol_y = 100;
 
-	SysTbl->ConOut->ClearScreen(SysTbl->ConOut);
-	DrawRect(win, white);
+	file_num = gui_ls();
 	while(1){
 		SysTbl->BootServices->WaitForEvent(1,
 										&(SPP->WaitForInput), &(waitidx));
@@ -68,16 +101,22 @@ void Gui(void)
 			}
 
 			MoveCursol(cursol_x, cursol_y);
+			for(UINT32 i = 0; i < file_num; i++){
+				if(IsInRect(cursol_x, cursol_y, FileList[i].rect)){
+					if(!FileList[i].IsHighlight){
+						DrawRect(FileList[i].rect, yellow);
+						FileList[i].IsHighlight = true;
+					}
+					if(s.LeftButton){
+						gui_cat(FileList[i].Name);
+						file_num = gui_ls();
+					}
+				}else{
+					if(FileList[i].IsHighlight){
+						DrawRect(FileList[i].rect, white);
+						FileList[i].IsHighlight = false;
+					}
 
-			if(IsInRect(cursol_x, cursol_y, win)){
-				if(!IsHilight){
-					DrawRect(win, yellow);
-					IsHilight = true;
-				}
-			}else{
-				if(IsHilight){
-					DrawRect(win, white);
-					IsHilight = false;
 				}
 			}
 		}

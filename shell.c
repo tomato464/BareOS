@@ -2,6 +2,34 @@
 RECT rec = {100,100, 100, 200};
 
 #define MAX_BUF_SIZE 256
+void cat(CHAR16 *file_name)
+{
+	EFI_STATUS stat;
+	EFI_FILE_PROTOCOL *root;
+	EFI_FILE_PROTOCOL *file;
+
+	CHAR16 buffer[MAX_FILE_BUF];
+	UINTN buffer_size = MAX_FILE_BUF;
+
+	stat = OpenVolume(&root);
+	Assert(stat, L"SFP->OpenVlume");
+	stat = Open(root, &(file), file_name, EFI_FILE_MODE_READ, 0);
+	if(stat){
+		puts(L"error at root->open\r\n");
+		Close(root);
+		return;
+	}
+	stat = Read(file, &buffer_size, (void*)buffer);
+	Assert(stat, L"file->read");
+	if(buffer_size){
+		puts(buffer);
+	}
+	puts(L"\r\n");
+
+	Close(file);
+	Close(root);
+	return;
+}
 
 UINT32 ls()
 {
@@ -99,6 +127,8 @@ void shell()
 		}else if(!strcmp(buf, L"num")){
 			putxval(0x123456, 8);
 			puts(L"\r\n");
+		}else if(!strcmp(buf, L"cat")){
+			cat(L"abc");
 		}else{
 			puts(L"unrecognized command\r\n");
 		}

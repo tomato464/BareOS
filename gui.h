@@ -6,6 +6,9 @@
 #include"graphics.h"
 #include"shell.h"
 
+#define H_PER_CHAR 20
+#define W_PER_CHAR 8
+
 void Gui(void);
 
 #endif

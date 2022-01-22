@@ -42,7 +42,7 @@ CHAR16 getc(void)
 								&waitidx);
 	SysTbl->ConIn->ReadKeyStroke(SysTbl->ConIn, &key);//may cause error
 
-	return key.UnicodeChar;
+	return (key.UnicodeChar) ? key.UnicodeChar : (key.ScanCode + SC_OFS);
 }
 
 UINT32 gets(CHAR16 *buf, UINT32 buf_size)
@@ -72,6 +72,16 @@ int strcmp(const CHAR16 *s1, const CHAR16 *s2)
 	return 0;
 }
 
+UINT32 strlen(const CHAR16 *str)
+{
+	UINT32 size = 0;
+	while(*str != L'\0'){
+		str++;
+		size++;
+	}
+	return size;
+}
+		
 void memset(void *p, int n, int size)
 {
 	UINT8 *start = (UINT8 *)p;

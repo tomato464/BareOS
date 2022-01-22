@@ -9,6 +9,8 @@ EFI_STATUS OpenVolume(EFI_FILE_PROTOCOL **Root)
 	return n;
 }
 
+
+
 EFI_STATUS Read(EFI_FILE_PROTOCOL *this, UINTN *buffer_size, void *buffer)
 {
 	EFI_STATUS n;
@@ -17,6 +19,16 @@ EFI_STATUS Read(EFI_FILE_PROTOCOL *this, UINTN *buffer_size, void *buffer)
 		return 1;
 	}
 	n = this->Read(this, buffer_size, buffer);
+	return n;
+}
+
+EFI_STATUS Open(EFI_FILE_PROTOCOL *this, EFI_FILE_PROTOCOL **new, CHAR16 *name, \
+				UINT64 mode, UINT64 attribute)
+{
+	EFI_STATUS n;
+
+	n = this->Open(this, new, name, mode, attribute);
+
 	return n;
 }
 
