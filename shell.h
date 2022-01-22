@@ -5,6 +5,7 @@
 #include"lib.h"
 #include"graphics.h"
 #include"gui.h"
+#include"file.h"
 extern RECT rec;
 
 void shell(void);

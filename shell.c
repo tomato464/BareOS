@@ -3,6 +3,38 @@ RECT rec = {100,100, 100, 200};
 
 #define MAX_BUF_SIZE 256
 
+UINT32 ls()
+{
+	EFI_STATUS status;
+	EFI_FILE_PROTOCOL *fs;
+	EFI_FILE_INFO *file_info;
+	UINT32 idx = 0;
+	UINTN buffer_size = MAX_FILE_BUF;
+	UINT8  buf[MAX_FILE_BUF];
+
+	status = OpenVolume(&fs);
+	Assert(status, L"OpenVolume");
+
+	while(1){
+		buffer_size = MAX_FILE_BUF;//otherwist this overwrite by read, and this will be 0;
+		status = Read(fs, &buffer_size, (void *)buf);
+		Assert(status, L"File Read");
+		if(!buffer_size){
+			break;
+		}
+		file_info = (EFI_FILE_INFO *)buf;
+		strncpy(FileList[idx].Name, file_info->FileName, MAX_FILE_NAME);
+		FileList[idx].Name[MAX_FILE_NAME] = L'\0';
+		puts(FileList[idx].Name);
+		puts(L" ");
+		idx++;
+	}
+
+	puts(L"\r\n");
+	Close(fs);
+	return idx;
+}
+
 void pstat()
 {
 	EFI_STATUS n;
@@ -60,6 +92,8 @@ void shell()
 			puts(L"\r\n");
 		}else if(!strcmp(buf, L"pstat")){
 			pstat();
+		}else if(!strcmp(buf, L"ls")){
+			ls();
 		}else if(!strcmp(buf, L"gui")){
 			Gui();
 		}else if(!strcmp(buf, L"num")){

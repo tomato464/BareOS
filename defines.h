@@ -20,6 +20,10 @@ typedef void *  EFI_HANDLE;
 typedef	void * EFI_EVENT;
 typedef unsigned short CHAR16;
 
+////EFI STATUS CODES
+#define EFI_SUCCESS	0
+#define EFI_LOAD_ERROR	2
+#define EFI_UNSUPPORTED	3
 
 ////////////GUID
 typedef struct{
@@ -39,6 +43,76 @@ typedef struct{
 #define EFI_SIMPLE_POINTER_PROTOCOL_GUID	\
 		{0x31878c87, 0xb75, 0x11d5, {0x9a, 0x4f, 0x0, 0x90, \
 			0x27, 0x3f, 0xc1, 0x4d}}
+
+#define EFI_SIMPLE_FILE_SYSTEM_PROTOCOL_GUID	\
+		{0x0964e5b22, 0x6459, 0x11d2, {0x8e, 0x39, 0x00, 0xa0, \
+			0xc9, 0x69, 0x72, 0x3b}}
+
+//////////file system
+//file mode
+#define EFI_FILE_MODE_READ		0x0000000000000001
+#define EFI_FILE_MODE_WRITE		0x0000000000000002
+#define EFI_FILE_MODE_CREATE	0x8000000000000000
+//file attribute
+#define EFI_FILE_READ_ONLY	0x0000000000000001
+#define EFI_FILE_HIDDEN		0x0000000000000002
+#define EFI_FILE_SYSTEM		0x0000000000000004
+#define EFI_FILE_RESERVED	0x0000000000000008
+#define EFI_FILE_DIRECTORY	0x0000000000000010
+#define EFI_FILE_ARCHIVE	0x0000000000000020
+#define EFI_FILE_VALID_ATTR	0x0000000000000037
+
+typedef struct{
+	UINT16 Year;
+	UINT8	Month;
+	UINT8	Day;
+	UINT8	Hour;
+	UINT8	Minute;
+	UINT8	Second;
+	UINT8	Pad1;
+	UINT32	NanoSecond;
+	INT16	TimeZone;
+	UINT8	Daylight;
+	UINT8	Pad2;
+} EFI_TIME;
+
+typedef struct {
+	UINT64	Size;
+	UINT64	FileSize;
+	UINT64	PhisicalSize;
+	EFI_TIME	CreateTime;
+	EFI_TIME	LastAccessTime;
+	EFI_TIME	ModificationTime;
+	UINT64	Attribute;
+	CHAR16	FileName[];
+}EFI_FILE_INFO;
+
+typedef struct EFI_FILE_PROTOCOL{
+	UINT64		Revision;
+	EFI_STATUS	(*Open)(
+				struct EFI_FILE_PROTOCOL *this,
+				struct EFI_FILE_PROTOCOL **NewHandle,
+				CHAR16	*FileName,
+				UINT64	OpenMode,
+				UINT64	Attribute);
+	EFI_STATUS	(*Close)(
+				struct EFI_FILE_PROTOCOL *this);
+	EFI_STATUS	_buf1;
+	EFI_STATUS	(*Read)(
+				struct EFI_FILE_PROTOCOL *this,
+				UINTN	*BufferSize,
+				void	*Buffer);
+	EFI_STATUS	buf2[5];
+}EFI_FILE_PROTOCOL;
+
+
+typedef struct EFI_SIMPLE_FILE_SYSTEM_PROTOCOL{
+	UINT64			Revision;
+	EFI_STATUS 		(*OpenVolume)(
+					struct EFI_SIMPLE_FILE_SYSTEM_PROTOCOL *this,
+					EFI_FILE_PROTOCOL	**Root);
+}EFI_SIMPLE_FILE_SYSTEM_PROTOCOL;
+
 
 /////pointer
 

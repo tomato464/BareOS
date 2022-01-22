@@ -79,3 +79,32 @@ void memset(void *p, int n, int size)
 		start[i] = n;
 	}
 }
+
+void Assert(EFI_STATUS stat, CHAR16 *str)
+{
+	if(!stat){
+		return;
+	}
+	puts(L"\r\n\r\n");
+	puts(str);
+	puts(L"  ");
+	putxval(stat, 8);
+
+	while(1){
+
+	}
+}
+
+void strncpy(CHAR16 *buf, const CHAR16 *str, UINT32 size)
+{
+	UINT32 i;
+	for(i = 0; i < size; i++){
+		if(str[i] == L'\0'){
+			break;
+		}
+		buf[i] = str[i];
+	}
+	for(; i < size; i++){
+		buf[i] = L'\0';
+	}
+}
