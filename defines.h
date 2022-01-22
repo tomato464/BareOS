@@ -105,7 +105,13 @@ typedef struct EFI_FILE_PROTOCOL{
 				struct EFI_FILE_PROTOCOL *this,
 				UINTN	*BufferSize,
 				void	*Buffer);
-	EFI_STATUS	buf2[5];
+	EFI_STATUS	(*Write)(
+				struct EFI_FILE_PROTOCOL *this,
+				UINTN	*BufferSize,
+				void *Buffer);
+	EFI_STATUS	buf2[4];
+	EFI_STATUS	(*Flush)(
+				struct EFI_FILE_PROTOCOL *this);
 }EFI_FILE_PROTOCOL;
 
 

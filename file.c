@@ -32,6 +32,19 @@ EFI_STATUS Open(EFI_FILE_PROTOCOL *this, EFI_FILE_PROTOCOL **new, CHAR16 *name, 
 	return n;
 }
 
+EFI_STATUS Write(EFI_FILE_PROTOCOL *this, UINTN *size, void *buf)
+{
+	EFI_STATUS n;
+	n = this->Write(this, size, buf);
+	return n;
+}
+
+EFI_STATUS Flush(EFI_FILE_PROTOCOL *this)
+{
+	EFI_STATUS n;
+	n = this->Flush(this);
+	return n;
+}
 EFI_STATUS Close(EFI_FILE_PROTOCOL *this)
 {
 	EFI_STATUS n;

@@ -19,5 +19,6 @@ void DrawRectAll(UINT32 x1, UINT32 y1, UINT32 x2, UINT32 y2,\
 void DrawRect(RECT rec, EFI_GRAPHICS_OUTPUT_BLT_PIXEL_FORMAT color);
 EFI_GRAPHICS_OUTPUT_BLT_PIXEL_FORMAT GetPixel(UINT32 x, UINT32 y);
 bool IsInRect(UINT32 x, UINT32 y, RECT rect);
+void Blt(UINT8 buf[], UINT32 w, UINT32 h);
 
 #endif

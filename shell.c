@@ -2,6 +2,98 @@
 RECT rec = {100,100, 100, 200};
 
 #define MAX_BUF_SIZE 256
+#define MAX_IMAGE_BUF 2097107
+
+UINT8 img[MAX_IMAGE_BUF];
+void view(CHAR16 *file_name)
+{
+
+	EFI_STATUS stat;
+	EFI_FILE_PROTOCOL *root;
+	EFI_FILE_PROTOCOL *file;
+	UINT32 hr = GOP->Mode->Info->HorizontalResolution;
+	UINT32 ver = GOP->Mode->Info->VerticalResolution;
+
+	UINTN buffer_size = MAX_IMAGE_BUF;
+
+	ClearScreen();
+	
+
+	stat = OpenVolume(&root);
+	Assert(stat, L"SFP->OpenVlume");
+	stat = Open(root, &(file), file_name, EFI_FILE_MODE_READ, EFI_FILE_READ_ONLY);
+	if(stat){
+		puts(L"error at root->open\r\n");
+		Close(root);
+		return;
+	}
+	stat = Read(file, &buffer_size, (void*)img);
+	Assert(stat, L"file->read");
+	if(buffer_size){
+		Blt(img, hr, ver);
+		while(1){
+			if(getc() == SC_ESC){
+				break;
+			}
+		}
+	}
+	puts(L"\r\n");
+
+
+	Close(file);
+	Close(root);
+
+}
+
+void edit(CHAR16 *file_name)
+{
+	EFI_STATUS stat;
+	EFI_FILE_PROTOCOL *root;
+	EFI_FILE_PROTOCOL *file;
+
+	CHAR16 buffer[MAX_FILE_BUF >> 1];
+	UINTN buffer_size = MAX_FILE_BUF;
+
+	ClearScreen();
+
+	CHAR16 c;
+	UINT32 i = 0;
+	while(1){
+		c = getc();
+
+		if(c == SC_ESC){
+			buffer[i] = L'\0';			
+			break;
+		}
+
+		if(c == L'\r'){
+			buffer[i++] = c;
+			buffer[i++] = L'\n';
+			puts(L"\r\n");
+			continue;
+		}
+		putc(c);
+		buffer[i++] = c;
+	}
+	stat = OpenVolume(&root);
+	Assert(stat, L"SFP->OpenVlume");
+	stat = Open(root, &(file), file_name, EFI_FILE_MODE_READ | EFI_FILE_MODE_WRITE, 0);
+	if(stat){
+		puts(L"error at root->open\r\n");
+		Close(root);
+		return;
+	}
+
+	stat = Write(file, &(buffer_size), (void *) buffer);
+	Assert(stat, L"file->Write");
+	
+	stat = Flush(file);
+	Assert(stat, L"file->flush");
+	Close(file);
+	Close(root);
+
+}
+
 void cat(CHAR16 *file_name)
 {
 	EFI_STATUS stat;
@@ -129,6 +221,17 @@ void shell()
 			puts(L"\r\n");
 		}else if(!strcmp(buf, L"cat")){
 			cat(L"abc");
+		}else if(!strcmp(buf, L"edit")){
+			edit(L"abc");
+			puts(L"\r\n");
+		}else if(!strcmp(buf, L"view")){
+			view(L"img");
+		}else if(!strcmp(buf, L"ver")){
+			putxval(GOP->Mode->Info->VerticalResolution, 8);
+			puts(L"\r\n");
+		}else if(!strcmp(buf, L"hor")){
+			putxval(GOP->Mode->Info->HorizontalResolution, 8);
+			puts(L"\r\n");
 		}else{
 			puts(L"unrecognized command\r\n");
 		}

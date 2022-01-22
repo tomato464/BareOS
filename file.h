@@ -20,6 +20,8 @@ EFI_STATUS OpenVolume(EFI_FILE_PROTOCOL **Root);
 EFI_STATUS Open(EFI_FILE_PROTOCOL *this, EFI_FILE_PROTOCOL **new, CHAR16 *name, \
 				UINT64 mode, UINT64 attribute);
 EFI_STATUS Read(EFI_FILE_PROTOCOL *this, UINTN *buffer_size, void *buffer);
+EFI_STATUS Write(EFI_FILE_PROTOCOL *this, UINTN *size, void *buf);
+EFI_STATUS Flush(EFI_FILE_PROTOCOL *this);
 EFI_STATUS Close(EFI_FILE_PROTOCOL *this);
 
 #endif

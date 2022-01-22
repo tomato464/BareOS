@@ -66,3 +66,26 @@ bool IsInRect(UINT32 x, UINT32 y, RECT rec)
 	}
 	return false;
 }
+void Blt(UINT8 buf[], UINT32 img_w, UINT32 img_h)
+{//only from (0, 0)
+	UINT32 ofs = 0;
+	UINT8 *fb = (UINT8 *)GOP->Mode->FrameBufferBase;
+	UINT32 hr = GOP->Mode->Info->HorizontalResolution;
+	UINT32 ver = GOP->Mode->Info->VerticalResolution;
+	for(UINT32 y = 0; y < ver; y++){
+		if(y >= img_h){
+			break;
+		}
+		for(UINT32 x = 0; x < hr; x++){
+			if(x >= img_w){
+				fb += (hr - img_w)*4;
+				break;
+			}
+			for(int k = 0; k < 4; k++){
+				*fb = buf[ofs];
+				ofs++;
+				fb++;
+			}
+		}
+	}
+}

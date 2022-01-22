@@ -2,3 +2,6 @@
 *.efi
 *.swp
 *.sh
+*.jpg
+*.png
+*.bgra
